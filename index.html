@@ -150,13 +150,40 @@
     <h1 class="headline">COMING SOON</h1>
     <p class="subtext">Something new is coming. Join the list and be the first to know when we launch.</p>
 
-    <form class="signup-form" action="https://formspree.io/f/xppwnlna" method="POST">
+    <form class="signup-form" id="newsletter-form">
       <input type="email" name="email" class="email-input" placeholder="Enter your email" required />
-      <button type="submit" class="submit-btn">JOIN THE LIST</button>
+      <button type="submit" class="submit-btn" id="submit-btn">JOIN THE LIST</button>
     </form>
 
-    <p class="disclaimer">No spam. Just updates from Sovren Clothing.</p>
+    <p class="disclaimer" id="form-response">No spam. Just updates from Sovren Clothing.</p>
   </main>
+
+  <script>
+    const scriptURL = 'https://script.google.com/macros/s/AKfycbzi9jU-MW1g6NHaTbBhPntLjbGWKZXU_v4zAcKfueMvQ9nfYmw_qeJBtds02mNawwwI/exec';
+    const form = document.getElementById('newsletter-form');
+    const btn = document.getElementById('submit-btn');
+    const responseText = document.getElementById('form-response');
+
+    form.addEventListener('submit', e => {
+      e.preventDefault();
+      btn.disabled = true;
+      btn.innerText = 'ADDING...';
+
+      fetch(scriptURL, { method: 'POST', body: new FormData(form) })
+        .then(response => {
+          btn.innerText = 'JOINED';
+          btn.style.backgroundColor = '#333333';
+          btn.style.color = '#ffffff';
+          responseText.innerText = 'Thank you! You are on the list.';
+          form.reset();
+        })
+        .catch(error => {
+          btn.disabled = false;
+          btn.innerText = 'JOIN THE LIST';
+          responseText.innerText = 'Something went wrong. Please try again.';
+        });
+    });
+  </script>
 
 </body>
 </html>
